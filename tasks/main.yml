@@ -1,0 +1,44 @@
+---
+- name: Ensure Pip is installed for not Alpine Linux.
+  ansible.builtin.package:
+    name: python3-pip
+    state: present
+  when: ansible_distribution != 'Alpine'
+
+- name: Ensure Pip is installed for Alpine Linux.
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - py3-pip
+    - ansible
+    - ansible-lint
+  when: ansible_distribution == 'Alpine'
+
+- name: Install required pip packages for not Alpine Linux
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    break_system_packages: true
+  loop:
+    - ansible
+    - ansible-lint
+    - molecule
+    - docker
+    - podman
+    - 'molecule-plugins[docker]'
+    - 'molecule-plugins[podman]'
+    - yamllint
+  when: ansible_distribution != 'Alpine'
+
+- name: Install required pip packages for Alpine Linux
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    break_system_packages: true
+  loop:
+    - molecule
+    - docker
+    - podman
+    - 'molecule-plugins[docker]'
+    - 'molecule-plugins[podman]'
+    - yamllint
+  when: ansible_distribution == 'Alpine'

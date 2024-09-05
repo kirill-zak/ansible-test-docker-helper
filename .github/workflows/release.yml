@@ -1,0 +1,294 @@
+---
+name: Release
+'on':
+  push:
+    tags:
+      - '*'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install lint dependencies
+        run: pip3 install yamllint ansible-lint
+
+      - name: Run linter
+        run: |
+          set -e
+          yamllint .
+          ansible-lint .
+  
+  test-almalinux:
+    name: Molecule test - AlmaLinux 9.x
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        tag: ['9.0', '9.1', '9.2', '9.3', '9.4']
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman yamllint ansible-lint
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTR: kirillzak/docker-almalinux-ansible
+          MOLECULE_TAG: ${{ matrix.tag }}
+
+
+  test-alpine-3-16:
+    name: Molecule test - Alpine Linux 3.16.x
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        tag: ['3.16.0', '3.16.1', '3.16.2', '3.16.3', '3.16.4', '3.16.5', '3.16.6', '3.16.7', '3.16.8', '3.16.9']
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman yamllint ansible-lint
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTR: kirillzak/docker-alpine-ansible
+          MOLECULE_TAG: ${{ matrix.tag }}
+
+
+  test-alpine-3-17:
+    name: Molecule test - Alpine Linux 3.17.x
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        tag: ['3.17.0', '3.17.1', '3.17.2', '3.17.3', '3.17.4', '3.17.5', '3.17.6', '3.17.7']
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman yamllint ansible-lint
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTR: kirillzak/docker-alpine-ansible
+          MOLECULE_TAG: ${{ matrix.tag }}
+
+
+  test-alpine-3-18:
+    name: Molecule test - Alpine Linux 3.18.x
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        tag: ['3.18.0', '3.18.1', '3.18.2', '3.18.3', '3.18.4', '3.18.5', '3.18.6']
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman yamllint ansible-lint
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTR: kirillzak/docker-alpine-ansible
+          MOLECULE_TAG: ${{ matrix.tag }}
+
+  test-debian:
+    name: Molecule test - Debian
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        tag: [10, 11, 12]
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman yamllint ansible-lint
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTR: kirillzak/docker-debian-ansible
+          MOLECULE_TAG: ${{ matrix.tag }}
+
+  test-fedora:
+    name: Molecule test - Fedora Linux
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        tag: [35, 36, 37, 38, 39, 40]
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman yamllint ansible-lint
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTR: kirillzak/docker-fedora-ansible
+          MOLECULE_TAG: ${{ matrix.tag }}
+  
+  test-rockylinux:
+    name: Molecule test - Rocky Linux 9.0
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        tag: ['9.0', '9.1', '9.2', '9.3', '9.4']
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman yamllint ansible-lint
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTR: kirillzak/docker-rockylinux-ansible
+          MOLECULE_TAG: ${{ matrix.tag }}
+
+  test-ubuntu:
+    name: Molecule test - Ubuntu
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        tag: ['18.04', '20.04', '22.04', '24.04']
+
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule 'molecule-plugins[podman]' podman yamllint ansible-lint
+
+      - name: Run Molecule tests
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTR: kirillzak/docker-ubuntu-ansible
+          MOLECULE_TAG: ${{ matrix.tag }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    needs:
+      - lint
+      - test-almalinux
+      - test-alpine-3-16
+      - test-alpine-3-17
+      - test-alpine-3-18
+      - test-alpine-3-19
+      - test-debian
+      - test-fedora
+      - test-rockylinux
+      - test-ubuntu
+
+    steps:
+      - name: Notify ansible-galaxy
+        uses: robertdebock/galaxy-action@1.2.0
+        with:
+          galaxy_api_key: ${{ secrets.galaxy_api_key }}

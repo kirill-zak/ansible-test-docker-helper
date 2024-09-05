@@ -1,0 +1,43 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    # ansible
+    - name: Get ansible version
+      ansible.builtin.command: ansible --version
+      register: ansible_version
+      changed_when: false
+
+    - name: Check ansible package status
+      ansible.builtin.assert:
+        that: ansible_version | length > 0
+
+    # ansible-lint
+    - name: Get ansible-lint version
+      ansible.builtin.command: ansible-lint --version
+      register: yansible_lint_version
+      changed_when: false
+
+    - name: Check ansible-lint package status
+      ansible.builtin.assert:
+        that: "false == yansible_lint_version['failed']"
+
+    # molecule
+    - name: Get molecule version
+      ansible.builtin.command: molecule --version
+      register: molecule_version
+      changed_when: false
+
+    - name: Check molecule package status
+      ansible.builtin.assert:
+        that: "false == molecule_version['failed']"
+
+    # yamllint
+    - name: Get yamllint version
+      ansible.builtin.command: yamllint --version
+      register: yamllint_version
+      changed_when: false
+
+    - name: Check yamllint package status
+      ansible.builtin.assert:
+        that: "false == yamllint_version['failed']"
