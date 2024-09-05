@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: kirill_zak
+  description: An Ansible role for helping test an Ansible docker roles
+  role_name: ansible_test_docker_helper
+  license: MIT
+  min_ansible_version: "2.1"
+
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+        - bullseye
+        - buster
+
+  galaxy_tags: [pip, docker, helper]
+
+dependencies: []
